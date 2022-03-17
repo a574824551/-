@@ -11,3 +11,9 @@ https://www.iarpa.gov/research-programs/trojai
 
 方案三：检查木马是否被触发。检查输入是否会让模型对特定地方过分关注。（检测时间未知，作为事后溯源可能更靠谱一些
 
+以项目赞助号可以搜到相关的项目论文：
+https://scholar.google.com/scholar?hl=en&as_sdt=0%2C47&q=W911NF20C0034+OR+W911NF20C0038+OR+W911NF20C0045+OR+W911NF20C0035+OR+IARPA-20001-D2020-2007180011
+
+https://www2.eecs.berkeley.edu/Pubs/TechRpts/2021/EECS-2021-90.pdf
+这一篇通过对抗样本寻找触发器，对每一类样本都去做对抗攻击，看看能不能找到某个通用的扰动对某一类高度敏感，那就有可能是后门触发器。当然这也要对触发器的大小进行不断的尝试、约束。是个有效的方法，但是计算成本很高。
+
