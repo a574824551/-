@@ -36,3 +36,30 @@ GAN被广泛用于换脸中，FaceSwap-GAN①是增加了GAN技术的Deepfakes�
 ① OORD A, DIELEMAN S, ZEN H, et al. Wavenet: A generative model for raw audio[J]. arXiv preprint arXiv: 1609.03499, 2016.
 ② WANG Y, SKERRY-RYAN R J, STANTON D,et al. Tacotron: Towards end-to-end speech synthesis[C]//Interspeech 2017, 18th Annual Conference of the International Speech Communication Association.2017: 4006-4010.
 ③ ARIK S, CHRZANOWSKI M, COATES A, et al.Deep voice: Real-time neural text-to-speech[C]// 34th International Conference on Machine Learning. 2017: 195-204.
+
+与图像伪造技术类似，GAN时常被用于语音伪造中的语音转换中，也就是将源人物的语音转换为目标人物的语音。例如，Kaneko等人③利用 GAN 的一种特殊架构CycleGAN进行了语音转换。CycleGAN这种语音转换方法需要事先指定源说话人和目标说话人的身份，而Kinnunen等人④借鉴了说话识别中的Ivector与PLDA，打破这种局限，只训练一个系统，就能处理许多源说话人和目标说话人。自编码器也被用于语音转换中，模型中包含一个编码器和一个解码器，编码器负责把数据的表层特征进行隐表示，解码器负责从隐表示中恢复出表层特征。在语音转换任务中，数据的表层特征可以是波形、语谱图、MFCC序列等；隐表示则蕴含了语音的内容和说话人的身份信息。基于自编码器的语音转换工作包括论文⑤等。
+① ARIK S, DIAMOS G, GIBIANSKY A, et al. Deep voice 2: Multi-speaker neural text-to-speech[C]//Advances in neural information processing systems. 2017: 2962-2970.
+② PING W, PENG K, GIBIANSKY A, et al. Deep voice 3: 2000-speaker neural text-to-speech[J]. Proc. ICLR, 2018: 214-217.
+③ KANEKO T, KAMEOKA H. Parallel-data-free voice conversion using cycle-consistent adversarial networks[J]. arXiv preprint arXiv:1711.11293, 2017.
+④ KINNUNEN T, JUVELA L, ALKU P, et al. Non-parallel voice conversion using i-vector PLDA: Towards unifying speaker verification and transformation[C]//2017 IEEE international conference on acoustics, speech and signal processing (ICASSP). IEEE, 2017: 5535-5539.
+⑤ HSU C C, HWANG H T, WU Y C, et al. Voice conversion from non-parallel corpora using variational auto-encoder [C]//2016 Asia-Pacific Signal and Information Processing Association Annual Summit and Conference (APSIPA). IEEE, 2016: 1-6.
+
+与前面介绍的文本转语音的TTS技术、语音转语音的语音转换技术不同，语音克隆技术的输入往往既有文本内容，又有语音内容。语音克隆系统根据输入的语音内容来提取说话人的音色特征，根据输入的文本内容来控制生成的语音需要包含的内容，可以让目标人物“说”任何想“说”的话。其实这项技术也可以视为一个多说话人的TTS系统。Jia等人①提出了一个经典的语音克隆系统，该系统包含一个语音编码器，用于提取说话人的音色特征；一个文本编码器，用于编码需要生成的文本内容。得到语音编码和文本编码后将它们进行拼接，送入一个解码器中生成梅尔声谱图，最后连接一个声码器将梅尔声谱图合成最终的语音，整体流程如图7.11所示。
+① JIA Y, ZHANG Y, WEISS R, et al. Transfer learning from speaker verification to multispeaker text-to-speech synthesis[J]. Advances in neural information processing systems, 2018.
+
+
+
+常见的深度伪造数据集：
+数据类型	数据集	真实视频（语音）数量/伪造视频（语音）数量（个）
+视觉伪造数据	UADFV	49/49
+	Celeb-DF	590/5639
+	FaceForensics	1004/1004
+	FaceForensics++	1000/1000
+	Deepfake-TIMIT	320/640
+	Mesonet data	11509/8000
+	DFDC	100129/19025
+	DeepForensics-1.0 	50000/10000
+	WildDeepfake 	0/1869
+语音伪造数据	ASVspoof 2015	9404/184000
+	ASVspoof 2019	-
+
