@@ -63,3 +63,60 @@ GAN被广泛用于换脸中，FaceSwap-GAN①是增加了GAN技术的Deepfakes�
 语音伪造数据	ASVspoof 2015	9404/184000
 	ASVspoof 2019	-
 
+
+检测：
+
+总的来说，视觉伪造的防御研究较多，而语音伪造的防御研究相对较少。视觉伪造防御可以分为技术检测和对抗防御两种类型。其中，技术检测是指事后通过技术手段对视觉内容进行真伪检测；对抗防御是指事前对源数据进行处理，使得深度伪造失败。
+
+目前行业内对事后检测的解决方案研究较多。使用算法来对技术内容进行检测，往往根据提取特征的不同，可以分为不同的类别，如基于图像篡改痕迹的方法、基于数据驱动的方法、基于生理特征的方法等。
+
+早期的伪造视频质量较差，因此早期的一些伪造视频技术检测方法大多提取篡改痕迹特征来对伪造视频进行鉴别。Li等人①指出早期的深度学习算法往往只能生成低分辨率的图像，之后需要被转换为匹配替换的人脸，这样的转换导致分辨率的差异，从而使得生成的视频带有明显的伪影，可以使用CNN来提取这样的特征。
+除分辨率外，由于图像的数据点插值是随机的，这会导致全局眼睛左右颜色不一致；还有由于光照的不一致，篡改区域和正常区域对于光照的反射不一样，甚至完全覆盖掉之前人脸的光照，许多深度伪造算法会丢失眼睛反射细节；还有牙齿部分的生成往往较模糊，有时候仅能生成一些白色的斑点。Matern等人②就基于这些真伪人脸细节上的差异来区分真伪人脸。
+① LI Y, LYU S. Exposing deepfake videos by detecting face warping artifacts[J]. arXiv preprint arXiv:1811.00656, 2018.
+② MATERN F, RIESS C, STAMMINGER M. Exploiting visual artifacts to expose deepfakes and face manipulations [C]//2019 IEEE Winter Applications of Computer Vision Workshops (WACVW). IEEE, 2019: 83-92.
+
+除一些五官上的细节差异外，在人脸合成过程中，通常需要将合成的人脸融合到背景人脸中，在这个过程中往往会造成伪造人脸的混合边界伪影明显。在此基础上，Li等人①提出了一种名为Face X-ray的方法来检测图像是否来自两幅图像的混合，从而区分伪造图像。
+① LI L, BAO J, ZHANG T, et al. Face x-ray for more general face forgery detection[C]//Proceedings of the IEEE/CVF conference on computer vision and pattern recognition. 2020: 5001-5010.
+
+这些基于图像篡改痕迹来对深度伪造内容进行检测的方法在一些数据集上表现良好，但这些数据集中多为较早提出的一些深度伪造方法生成的伪造内容，篡改痕迹较为明显。随着技术的发展，伪造合成内容越来越真实，合成图像或视频的分辨率越来越高，因此这类检测方法的性能大大降低。
+
+以数据为驱动的深度伪造检测方法是目前最主流的检测方法。这类方法充分利用大数据的优势，利用深度学习算法来学习真实数据与伪造数据之间的差异。根据使用数据方式的不同，这类方法可以分为基于帧内特征的方法和基于帧间特征的方法。其中，基于帧内特征的方法将视频解析为帧，先实现对视频帧的检测，再根据多帧的检测结果进行综合决策；而基于帧间特征的方法将提取视频帧的时序特征进行整体的判断。
+
+基于帧内特征的方法直接使用分类网络对视频帧进行分类，但视频中经常出现的情况是，当前视频帧中并没有人脸出现，在这类情况下，如果使用分类网络直接对视频帧进行分类，则效果较差。因此，更好的解决方案是先使用人脸检测算法对视频帧中的人脸进行检测，再将检测到的人脸送入分类网络中进行真伪判断。Rossler等人①利用Xception网络对全帧和检测到的人脸分别进行训练，发现基于人脸训练的模型效果较好。后续出现了许多基于人脸检测与分类的伪造视频检测方法，区别主要在于后续分类网络的选择上。例如，Nguyen等人②首先利用VGG19来提取检测到的人脸特征，然后送入胶囊网络中进行真伪判断。
+① ROSSLER A,COZZOLINO D,VERDOLIVA L,et al.FacefoG FaceForensics+ +:Learning to Detect Manipulated FacialImages [C ]∥Proce edings of the IEEE International Conference onComputerVision.2019:1G11.
+② NGUYEN H H, YAMAGISHI J, ECHIZEN I. Capsule-forensics: Using capsule networks to detect forged images videos[J].arXiv preprint arXiv:1810. 11215, 2018.
+
+除此之外，Mo等人①通过增加高通滤波和背景作为CNN的输入来提升检测效果，Durall等人②通过离散傅里叶变换提取特征，显示出很好的效果。虽然这方法利用现有的神经网络能够快速学习到数据中的篡改特征，但是方法的迁移性较差。为了解决这个问题，Cozzolino等人③设计了一个新的基于自动编码器的神经网络结构，能够学习在不同的扰动域下的编码能力，只需要在一个数据集上训练，在另一个数据集上获取小规模数据进行调优，就能达到较好的效果。Nguyen等人④在此基础上进行了改进，设计了Y型解码器，在分类的同时融入分割和重建损失，通过分割辅助分类效果。Li等人⑤特别设计了一种基于图片区域的双流网络，首先分别学习人脸局部区域的五官特征及前景人脸与背景之间的差异，然后结合两者特征进行综合判断。
+①	MO H, CHEN B, LUO W. Fake faces identification via convolutional neural network[C]//Proceedings of the 6th ACM Workshop on Information Hiding and Multimedia Security. 2018: 43-47.
+②	DURALL R, KEUPER M, PFREUNDT F J, et al. Unmasking DeepFakes with simple Features[J]. arXiv preprint arXiv:1911.00686,2019.
+③	COZZOLINO D, THIES J, RÖSSLER A, et al. Forensictransfer: Weakly-supervised domain adaptation for forgery detection[J]. arXiv preprint arXiv:1812.02510, 2018.
+④	NGUYEN H H, FANG F, YAMAGISHI J, et al. Multi-task learning for detecting and segmenting manipulated facial images and videos[J]. arXiv preprint arXiv:1906.06876, 2019.
+⑤	LI X, YU K, JI S, et al. Fighting Against Deepfake: Patch&Pair Convolutional Neural Networks (PPCNN)[C]// Companion Proceedings of the Web Conference 2020. 2020: 88-89.
+
+基于视频帧的检测方法一般根据多帧图片的预测结果来对视频的预测结果进行综合判断，最终确定视频的真伪。除这种判断方式外，还可以利用神经网络来提取帧间的特征对视频真伪进行综合判断。
+
+基于帧间特征的方法主要提取帧间时序特征，这类特征通常可以很好地表达人物的面部表情变化、头部动作变化或帧间光流变化等。Agarwal等人①提出先将面部肌肉的移动编码为动作单元，再利用皮尔逊相关系数对特征的相关性进行扩充，接着利用一个SVM分类器在特征集合上进行伪造视频的检测。Amerini等人②则提出采用VGG16来学习帧间光流的差异，并进行分类。不过要提取帧间时序特征，更主流的方式是使用RNN，因此Guera等人③提出了一种基于CNN、RNN和LSTM的网络架构。其中，CNN用于提取视频帧的特征，将连续多帧的特征一起输入LSTM中，最终产生一个真伪概率估计，整体架构如图7.15所示。
+基于数据驱动的方法充分利用大数据的优势，来提取数据特征对伪造视频进行检测，这类方法部署简单，是当前最主流的技术检测方法。但是这类方法的性能往往与数据相关，方法在见过的数据中往往表现出较好的性能，而在没见过的数据中往往性能较差。
+①	AGARWAL S, FARID H, GU Y, et al. Protecting world leaders against deep fakes[C]//Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition Workshops. 2019: 38-45.
+②	AMERINI I, GALTERI L, CALDELLI R, et al. Deepfake Video Detection through Optical Flow based CNN[C]// Proceedings of the IEEE International Conference on Computer Vision Workshops. 2019.
+③	GUERA D, DELP E J. Deepfake video detection using recurrent neural networks[C]//2018 15th IEEE International Conference on Advanced Video and Signal Based Surveillance (AVSS). IEEE, 2018: 1-6.
+
+
+视频中的人物生理特征同样可以作为真伪鉴别的关键依据。视频中的人物往往包含一定的生理特征，如眨眼等生理行为。Li等人①研究发现，真实视频中的人的眨眼的频率和时间都在一定的范围内，而深度伪造视频中的生成人脸虽然与真实人脸相似，但是从眨眼这些细节的动作和频率来看，和真人有一定的区别。因此，作者提出了一种基于CNN与RNN的方法来捕捉真实眨眼动作与伪造视频中人物眨眼动作的差异，基于此来区分视频真伪。相似的工作还有根据头部转动会引入姿态估计的错误来鉴别伪造视频。除此之外，还有相关研究②提出利用心率等生物特征来识别伪造视频，研究发现真实视频与伪造视频的心率分布不同，可以通过3种方法提取心率特征，根据心率特征进行伪造视频的鉴别。
+随着伪造技术的提升，眨眼、转头等生物动作的合成越来越自然，因此基于这类生物特征的鉴别方法逐渐失效。基于心率等隐形生物特征的伪造视频鉴别方法往往依赖于高清摄像头等采集设备来捕获清晰、高质量的面部特征，视频一旦被压缩，此类方法的可行性将大大降低。
+除前面介绍的基于图像篡改痕迹的方法、基于数据驱动的方法、基于生理特征的方法外，还有一些小众的技术检测手段。例如，一些研究③④提出，当前的深度伪造视频大多数是基于GAN来生成的，因此可以利用GAN生成图像的一些特征来对伪造视频进行检测，如GAN生成技术改变了图像的像素和色度空间统计的特征，因此可以通过对特征共生矩阵的学习来区分真实图像和GAN生成图像的差异。还有一些研究①②提出，不同的GAN生成的图像在中间分类层有唯一的特征，可以用这个特征作为GAN生成器的指纹来区分真伪。类似的研究还有Mccloskey等人的工作③和Xuan等人的工作④。
+此外，还可以根据生成图像的不一致性来进行检测。Zhou等人⑤提出了一个双流Faster RCNN网络，一条RGB流提取图像特征，来检测对比差异和篡改痕迹；另一条噪声流利用噪声特点来检测篡改区域与未篡改区域的噪声不一致性，最后融合双流特征来进行判断。Cun等人⑥则根据整体与局部的特征不一致性学习一个半—全局网络来实现拼接定位。
+技术检测的方法多是事后防御的方法，也就是说已经有伪造视频产生，需要从众多真实视频中将伪造视频检测出来，这是一种被动的防御方式。那么如何以一种更加主动的方式来防御深度伪造技术的不合理应用呢？
+
+① LI Y, CHANG M C, LYU S. In ictu oculi: Exposing ai created fake videos by detecting eye blinking[C]//2018 IEEE International Workshop on Information Forensics and Security (WIFS). IEEE, 2018: 1-7.
+②	FERNANDES S, RAJ S, Ortiz E, et al. Predicting Heart Rate Variations of Deepfake Videos using Neural ODE[C]//Proceedings of the IEEE International Conference on Computer Vision Workshops. 2019.
+③	NATARAJ L, MOHAMMED T M, MANJUNATH B S, et al. Detecting GAN generated fake images using co-occurrence matrices[J]. Electronic Imaging, 2019, 2019(5): 5321-5327.
+④	LI H, LI B, Tan S, et al. Identification of deep network generated images using disparities in color components[J]. arXiv preprint arXiv:1808.07276, 2018.
+① MARRA F, GRAGNANIELLO D, VERDOLIVA L, et al. Do gans leave artificial fingerprints?[C]//2019 IEEE Conference on Multimedia Information Processing and Retrieval (MIPR). IEEE, 2019: 506-511.
+② YU N, DAVIS L S, FRITZ M. Attributing fake images to gans: Learning and analyzing gan fingerprints[C]// Proceedings of the IEEE International Conference on Computer Vision. 2019: 7556-7566
+③ MCClOSKEY S, ALBRIGHT M. Detecting gan-generated imagery using color cues[J]. arXiv preprint arXiv: 1812.08247, 2018.
+④ XUAN X, PENG B, WANG W, et al. On the generalization of GAN image forensics[C]//Chinese Conference on Biometric Recognition. Springer, Cham, 2019: 134-141.
+⑤ ZHOU P, HAN X, MORARIU V I, et al. Learning rich features for image manipulation detection[C]//Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition. 2018: 1053-1061.
+⑥ CUN X, PUN C M. Image Splicing Localization via Semi-global Network and Fully Connected Conditional Random Fields[C]//Proceedings of the European Conference on Computer Vision (ECCV). 2018.
+
+
