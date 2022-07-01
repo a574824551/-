@@ -12,8 +12,27 @@ KIM H, GARRIDO P, TEWARI A, et al. Deep video portraits[J]. ACM Transactions on 
 Suwajanakorn等人④将RNN应用到嘴型动作重建中，可以根据输入语音合成符合发音的嘴型动作。不同场景的表情迁移技术日益成熟。
 SUWAJANAKORN S, SEITZ S M, KEMELMACHER-SHLIZERMAN I. Synthesizing obama: learning lip sync from audio[J]. ACM Transactions on Graphics (ToG), 2017, 36(4): 1-13.
 
-FaceSwap①是一种基于人脸融合的人脸替换方法。它首先获取人脸关键点，然后通过3D模型对人脸关键点位置进行建模，基于目标人物表情对替换人脸进行渲染，最后将渲染得到的人脸通过图像处理等操作融合到目标人物人脸上。图7.8展示了一种基于FaceSwap的改进后的人脸融合方法，为了促进最终的融合过程，该方法使用人脸分割算法对人脸区域进行了分割，仅在分割后的人脸区域进行人脸融合操作。Nirkin等人①提出用分割的思路促进换脸，通过网络分割出来的人脸估计3D人脸形状，最后融合源和目标这两个对齐的3D人脸形状。
+FaceSwap是一种基于人脸融合的人脸替换方法。它首先获取人脸关键点，然后通过3D模型对人脸关键点位置进行建模，基于目标人物表情对替换人脸进行渲染，最后将渲染得到的人脸通过图像处理等操作融合到目标人物人脸上。图7.8展示了一种基于FaceSwap的改进后的人脸融合方法，为了促进最终的融合过程，该方法使用人脸分割算法对人脸区域进行了分割，仅在分割后的人脸区域进行人脸融合操作。Nirkin等人提出用分割的思路促进换脸，通过网络分割出来的人脸估计3D人脸形状，最后融合源和目标这两个对齐的3D人脸形状。
+FaceSwap: 引自GitHub中的FaceSwap项目，2021/06/05.
+
+基于人脸融合的换脸方法通常成本较低，只需要一张替换目标的人脸照片，但针对人脸角度变化较大的场景，往往合成效果较差。因此研究人员开始关注将深度学习技术应用到人脸生成中，这类方法多采用自动编码器（Autoencoder）或生成对抗网络（GAN）。
+
+Deepfakes是较早开源的基于自动编码器的换脸网络，它的整体流程分为训练阶段和生成阶段两个部分。自动编码器往往由一个编码器和一个解码器组成，其中编码器对输入进行降维，解码器使用降维后的变量来得到与输入相似的输出。基于自动编/解码器，通过用源人物和目标人物的几百张照片训练模型分别识别、还原两人面部的能力，最后用源人物的照片搭配目标人物的解码器就可以完成转换。Deepfakes的局限性在于，它往往需要上百张甚至更多的样本来进行训练，训练过程往往消耗大量时间和资源。
+
+GAN被广泛用于换脸中，FaceSwap-GAN①是增加了GAN技术的Deepfakes，引入鉴别器损失函数，在生成的过程中判断生成的图像和原始图像的相似度，来提升生成图像的质量。CycleGAN②③利用GAN学习两个类别之间的转换关系的特点，在不需要成对数据的前提下实现了不同的两个域之间的图像转换。该方法可以视为换脸技术的早期尝试，但并未达到很好的换脸效果。后期提出的ReCycleGAN④⑤，结合了空间信息和视频流时间信息，并结合了内容转换和风格保留的对抗损失。相比于CycleGAN，ReCycleGAN在细节上更拟合目标图像。GAN的加入使得生成的人脸更加逼真自然。除换脸外，GAN还被广泛用于生成虚拟的人脸和篡改人脸属性，如starGAN⑥、StackGAN⑦、PGAN⑧等。
+① FaceSwap-GAN: 引自GitHub官网shaoanlu/faceswap-GAN库，2021/06/05.
+② ZHU J Y, PARK T, ISOLA P, et al. Unpaired image-to-image translation using cycle-consistent adversarial networks [C]//Proceedings of the IEEE international conference on computer vision. 2017: 2223-2232.
+③ CycleGAN: 引自GitHub官网错误!超链接引用无效。 库，2021/06/05.
+④ BANSAL A, MA S, RAMANAN D, et al. Recycle-gan: Unsupervised video retargeting[C]//Proceedings of the European conference on computer vision (ECCV). 2018: 119-135.
+⑤ ReCycleGAN: 引自GitHub官网SunnerLi/RecycleGAN库，2021/06/05.
+⑥ CHOI Y, CHOI M, KIM M, et al. Stargan: Unified generative adversarial networks for multi-domain image-to-image translation[C]//Proceedings of the IEEE conference on computer vision and pattern recognition. 2018: 8789-8797.
+⑦ ZHANG H, XU T, LI H, et al. Stackgan++: Realistic image synthesis with stacked generative adversarial networks[J]. IEEE transactions on pattern analysis and machine intelligence, 2018, 41(8): 1947-1962.
+⑧ KARRAS T, AILA T, LAINE S, et al. Progressive growing of gans for improved quality, stability, and variation[J]. arXiv preprint arXiv:1710.10196, 2017.
 
 
 语音DeepFake:
 
+随着深度学习技术的发展，TTS、语音转换、语音克隆技术都得到了大幅度的提升。谷歌提出了第一个端到端的语音合成算法WaveNet①，可以合成与人相似的音频。类似的TTS模型还有Tacotron②和DeepVoice③，后来Arik等人和Ping等人分别对DeepVoice系列进行了改进，提出了DeepVoice2①和DeepVoice3②。其中，DeepVoice2通过低维度的可训练的说话者编码来增强文本到语音的转换，使得单个模型能够生成不同的语音；而DeepVoice3是一个基于注意力机制的全卷积TTS系统，加快了语音合成的速度。
+① OORD A, DIELEMAN S, ZEN H, et al. Wavenet: A generative model for raw audio[J]. arXiv preprint arXiv: 1609.03499, 2016.
+② WANG Y, SKERRY-RYAN R J, STANTON D,et al. Tacotron: Towards end-to-end speech synthesis[C]//Interspeech 2017, 18th Annual Conference of the International Speech Communication Association.2017: 4006-4010.
+③ ARIK S, CHRZANOWSKI M, COATES A, et al.Deep voice: Real-time neural text-to-speech[C]// 34th International Conference on Machine Learning. 2017: 195-204.
