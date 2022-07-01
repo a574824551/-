@@ -1,0 +1,19 @@
+人脸DeepFake:
+
+Face2Face表情迁移：该方法借助Dlib，首先对图片中的人脸进行检测，找到人脸上的关键标记点，然后使用针对人脸的 pix2pix转换模型把关键标记点转换为目标人脸图像，实现了从源视频到目标视频的实时且高度逼真的面部表情迁移
+THIES J, ZOLLHOFER M, STAMMINGER M, et al. Face2face: Real-time face capture and reenactment of rgb videos[C]//Proceedings of the IEEE conference on computer vision and pattern recognition. 2016: 2387-2395.
+
+HeadOn②在Face2Face的基础上进行了改进，通过多个神经网络，让表情细节变得更加自然，如表情凝视、头部移动等
+THIES J, ZOLLHÖFER M, THEOBALT C, et al. Headon: Real-time reenactment of human portrait videos[J]. ACM Transactions on Graphics (TOG), 2018, 37(4): 1-13.
+
+相似的工作还有Kim等人③提出的利用时空架构的生成网络，将合成的渲染图片转换为真实图，进行脸部表情的迁移。
+KIM H, GARRIDO P, TEWARI A, et al. Deep video portraits[J]. ACM Transactions on Graphics (TOG), 2018, 37(4): 1-14.
+
+Suwajanakorn等人④将RNN应用到嘴型动作重建中，可以根据输入语音合成符合发音的嘴型动作。不同场景的表情迁移技术日益成熟。
+SUWAJANAKORN S, SEITZ S M, KEMELMACHER-SHLIZERMAN I. Synthesizing obama: learning lip sync from audio[J]. ACM Transactions on Graphics (ToG), 2017, 36(4): 1-13.
+
+FaceSwap①是一种基于人脸融合的人脸替换方法。它首先获取人脸关键点，然后通过3D模型对人脸关键点位置进行建模，基于目标人物表情对替换人脸进行渲染，最后将渲染得到的人脸通过图像处理等操作融合到目标人物人脸上。图7.8展示了一种基于FaceSwap的改进后的人脸融合方法，为了促进最终的融合过程，该方法使用人脸分割算法对人脸区域进行了分割，仅在分割后的人脸区域进行人脸融合操作。Nirkin等人①提出用分割的思路促进换脸，通过网络分割出来的人脸估计3D人脸形状，最后融合源和目标这两个对齐的3D人脸形状。
+
+
+语音DeepFake:
+
